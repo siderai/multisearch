@@ -9,8 +9,11 @@ license = "MIT"
 python = "^3.10"
 Django = "3.1"
 graphene-django = "^2.15.0"
+django-graphql-auth = "^0.3.16"
 elasticsearch-dsl = "^7.4.0"
 django-elasticsearch-dsl = "^7.2.2"
+python-dotenv = "^0.20.0"
+
 
 
 [tool.poetry.dev-dependencies]
