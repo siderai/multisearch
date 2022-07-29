@@ -3,7 +3,7 @@ import graphene
 from attr import field
 from graphene_django import DjangoListField, DjangoObjectType
 
-from .models import Book, Document
+from books.models import Book, Document
 
 
 class BookType(DjangoObjectType):
