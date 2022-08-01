@@ -18,6 +18,7 @@ class Query(UserQuery, MeQuery, graphene.ObjectType):
 
 
 class Mutation(AuthMutation, graphene.ObjectType):
+    # user crud
     pass
 
 

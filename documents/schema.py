@@ -2,6 +2,7 @@ import graphene
 from graphene_django import DjangoListField, DjangoObjectType
 
 from documents.models import App, Game
+from documents.search import search
 
 
 class GameType(DjangoObjectType):
