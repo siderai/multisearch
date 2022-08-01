@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from documents.models import Item
+from documents.models import Game, App
 
 
-admin.site.register(Item)
+admin.site.register(Game)
+admin.site.register(App)
