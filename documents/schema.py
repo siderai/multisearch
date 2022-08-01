@@ -1,8 +1,16 @@
 import graphene
 from graphene_django import DjangoListField, DjangoObjectType
+from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Search
 
 from documents.models import App, Game
-from documents.search import search
+from documents.es_docs import AppDocument, GameDocument
+from documents.exceptions import (
+    DjangoElasticsearchDslError,
+)  # not implemented yet, todo
+
+
+client = Elasticsearch()
 
 
 class GameType(DjangoObjectType):
@@ -10,35 +18,52 @@ class GameType(DjangoObjectType):
         model = Game
         fields = ("id", "name", "paid")
 
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        if info.context.user.is_authenticated:
+            if info.context.user.paid:
+                return queryset
+            return queryset.filter(paid=False)
+        return queryset.none()
+
 
 class AppType(DjangoObjectType):
     class Meta:
         model = App
         fields = ("id", "name", "paid")
 
-
-class Query(graphene.ObjectType):
-    free_apps = DjangoListField(AppType)
-    all_apps = DjangoListField(AppType)
-
-    free_games = DjangoListField(GameType)
-    all_games = DjangoListField(GameType)
-
     @classmethod
     def get_queryset(cls, queryset, info):
         if info.context.user.is_authenticated:
-            return queryset
+            if info.context.user.paid:
+                return queryset
+            return queryset.filter(paid=False)
         return queryset.none()
 
-    def resolve_all_apps(root, info):
-        if info.context.user.paid:
-            return App.objects.all()
-        return App.objects.filter(paid=False)
 
-    def resolve_all_Games(root, info):
-        if info.context.user.paid:
-            return App.objects.all()
-        return App.objects.filter(paid=False)
+class Query(graphene.ObjectType):
+    find_all_apps = DjangoListField(AppType, search_string=graphene.String())
+    find_all_games = DjangoListField(GameType, search_string=graphene.String())
+
+    def resolve_all_apps(self, info, search_string):
+        search = Search(using=client, doc_type=AppType)
+        request = search.query("match", name=f"{search_string}")
+        try:
+            response = request.execute()
+            qs = response.to_queryset()
+            return qs
+        except DjangoElasticsearchDslError:
+            pass
+
+    def resolve_all_games(self, info, search_string):
+        search = Search(using=client, doc_type=GameType)
+        request = search.query("match", name=f"{search_string}")
+        try:
+            response = request.execute()
+            qs = response.to_queryset()
+            return qs
+        except DjangoElasticsearchDslError:
+            pass
 
 
 schema = graphene.Schema(query=Query)

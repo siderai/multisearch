@@ -1,0 +1,2 @@
+class DjangoElasticsearchDslError(Exception):
+    pass
