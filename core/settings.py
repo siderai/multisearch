@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+import dj_database_url
+
 
 load_dotenv()
 
@@ -68,6 +70,10 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+db_from_env = dj_database_url.config(conn_max_age=0, ssl_require=False)
+if db_from_env:
+    DATABASES["default"] = db_from_env
 
 
 ELASTICSEARCH_DSL = {

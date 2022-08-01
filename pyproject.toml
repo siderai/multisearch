@@ -7,12 +7,13 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-Django = "3.1"
+Django = "3.2.8"
 graphene-django = "^2.15.0"
 django-graphql-auth = "^0.3.16"
 elasticsearch-dsl = "^7.4.0"
 django-elasticsearch-dsl = "^7.2.2"
 python-dotenv = "^0.20.0"
+dj-database-url = "^1.0.0"
 
 
 
