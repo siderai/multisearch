@@ -46,8 +46,9 @@ class Query(graphene.ObjectType):
     find_all_games = DjangoListField(GameType, search_string=graphene.String())
 
     def resolve_all_apps(self, info, search_string):
-        search = Search(using=client, doc_type=AppType)
-        request = search.query("match", name=f"{search_string}")
+        request = AppDocument.search(using=client).query(
+            "match", name=f"{search_string}"
+        )
         try:
             response = request.execute()
             qs = response.to_queryset()
@@ -56,8 +57,9 @@ class Query(graphene.ObjectType):
             pass
 
     def resolve_all_games(self, info, search_string):
-        search = Search(using=client, doc_type=GameType)
-        request = search.query("match", name=f"{search_string}")
+        request = GameDocument.search(using=client).query(
+            "match", name=f"{search_string}"
+        )
         try:
             response = request.execute()
             qs = response.to_queryset()
