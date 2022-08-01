@@ -1,6 +1,11 @@
 from django.db import models
 
 
-class Item(models.Model):
+class App(models.Model):
+    name = models.TextField()
+    paid = models.BooleanField()
+
+
+class Game(models.Model):
     name = models.TextField()
     paid = models.BooleanField()
