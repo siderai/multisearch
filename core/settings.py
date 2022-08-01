@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     "graphql_auth",
     "django_filters",
     # local
-    "books",
     "users",
     "documents",
 ]
