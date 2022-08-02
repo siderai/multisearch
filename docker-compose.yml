@@ -9,6 +9,9 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db/postgres"
+    networks:
+      - es-net
+      - db-net
     env_file:
       - .env
     depends_on:
@@ -20,6 +23,10 @@ services:
     image: postgres:11.5-alpine
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
+    networks:
+      - db-net
     env_file:
       - .env
     volumes:
@@ -27,10 +34,10 @@ services:
 
   elasticsearch:
     container_name: es-container
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.5
     environment:
       - xpack.security.enabled=false
-      - "discovery.type=single-node"
+      - discovery.type=single-node
     networks:
       - es-net
     ports:
@@ -50,4 +57,4 @@ services:
 
 networks:
   es-net:
-    driver: local
+  db-net:
