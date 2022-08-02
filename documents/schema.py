@@ -45,10 +45,8 @@ class Query(graphene.ObjectType):
     find_all_apps = DjangoListField(AppType, search_string=graphene.String())
     find_all_games = DjangoListField(GameType, search_string=graphene.String())
 
-    def resolve_all_apps(self, info, search_string):
-        request = AppDocument.search(using=client).query(
-            "match", name=f"{search_string}"
-        )
+    def resolve_find_all_apps(self, info, search_string):
+        request = AppDocument.search(using=client).query("match", name=search_string)
         try:
             response = request.execute()
             qs = response.to_queryset()
@@ -56,10 +54,8 @@ class Query(graphene.ObjectType):
         except DjangoElasticsearchDslError:
             pass
 
-    def resolve_all_games(self, info, search_string):
-        request = GameDocument.search(using=client).query(
-            "match", name=f"{search_string}"
-        )
+    def resolve_find_all_games(self, info, search_string):
+        request = GameDocument.search(using=client).query("match", name=search_string)
         try:
             response = request.execute()
             qs = response.to_queryset()
