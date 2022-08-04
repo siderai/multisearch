@@ -17,6 +17,7 @@ Run containers
 docker-compose up -d --build
 docker-compose exec app python3 manage.py migrate
 docker-compose exec app python3 manage.py loaddata db.json
+docker-compose exec app python3 manage.py search_index --rebuild
 docker-compose exec app python3 manage.py runserver
 ```
 
